@@ -15,6 +15,7 @@ const deleteLocalFile = (filePath) => {
   }
 };
 
+// UPLOAD ON CLOUDINARY
 const uploadOnCloudinary = async (filePath) => {
   if (!filePath) return null;
 
@@ -32,4 +33,18 @@ const uploadOnCloudinary = async (filePath) => {
   }
 };
 
-export { uploadOnCloudinary };
+// REMOVE FROM CLOUDINARY
+const deleteFromCloudinary = async (url) => {
+  try {
+    if (!url) return null;
+    const publicId = url.split("/").pop().split(".")[0];
+    const response = await cloudinary.uploader.destroy(publicId);
+    return response;
+  } catch (error) {
+    console.error("Error deleting from cloudinary: ", error);
+    return null;
+  }
+};
+
+
+export { uploadOnCloudinary , deleteFromCloudinary };

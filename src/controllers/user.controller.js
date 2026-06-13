@@ -245,8 +245,7 @@ const updateAvatar = asyncHandler(async (req, res) => {
     throw new ApiError(400, "Avatar file is required");
   }
 
-  const oldAvatar = await User.findById(req.user._id).select("avatar");
-  const oldAvatarUrl = oldAvatar?.avatar;
+  const oldAvatarUrl = req.user?.avatar;
 
   const avatar = await uploadOnCloudinary(avatarLocalPath);
 
@@ -261,7 +260,7 @@ const updateAvatar = asyncHandler(async (req, res) => {
   ).select("-password -refreshToken");
 
   // to delete the old avatar from cloudinary if it exists
-  await deleteFromCloudinary(oldAvatarUrl);
+   deleteFromCloudinary(oldAvatarUrl);
 
   return res
     .status(200)
@@ -271,12 +270,11 @@ const updateAvatar = asyncHandler(async (req, res) => {
 // UPDATE USER COVER IMAGE
 const updateCoverImage = asyncHandler(async (req, res) => {
   const coverImageLocalPath = req.file?.path || "";
-
+  console.log("FLAGGED USERRR: ", req.user);
   if (!coverImageLocalPath) {
     throw new ApiError(400, "Cover image file is required");
   }
-  const oldCoverImage = await User.findById(req.user._id).select("coverImage");
-  const oldCoverImageUrl = oldCoverImage?.coverImage;
+  const oldCoverImageUrl = req.user?.coverImage;
 
   const coverImage = await uploadOnCloudinary(coverImageLocalPath);
 
@@ -291,7 +289,7 @@ const updateCoverImage = asyncHandler(async (req, res) => {
   ).select("-password -refreshToken");
 
   // to delete the old cover image from cloudinary if it exists
-  await deleteFromCloudinary(oldCoverImageUrl);
+   deleteFromCloudinary(oldCoverImageUrl);
 
   return res
     .status(200)
